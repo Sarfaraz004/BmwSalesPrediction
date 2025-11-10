@@ -64,3 +64,45 @@ joblib.dump(label_encoders, encoders_path)
 
 print(f"✅ Model saved at: {model_path}")
 print(f"✅ Encoders saved at: {encoders_path}")
+
+
+def retrain_model():
+    print("🔁 Starting retraining process...")
+
+    # Load dataset
+    df = pd.read_csv(data_path)
+    df.dropna(inplace=True)
+
+    # Split features/target
+    X = df.drop(['Sales_Volume', 'Sales_Classification'], axis=1)
+    y = df['Sales_Volume']
+
+    # Encode categorical features
+    categorical_cols = X.select_dtypes(include=['object']).columns
+    label_encoders = {}
+    for col in categorical_cols:
+        le = LabelEncoder()
+        X[col] = le.fit_transform(X[col])
+        label_encoders[col] = le
+
+    # Train/test split
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # Train model
+    model = RandomForestRegressor(n_estimators=200, random_state=42, n_jobs=-1)
+    model.fit(X_train, y_train)
+
+    # Evaluate
+    y_pred = model.predict(X_test)
+    mae = mean_absolute_error(y_test, y_pred)
+    r2 = r2_score(y_test, y_pred)
+
+    print(f"✅ Retraining completed.")
+    print(f"📊 MAE: {mae:.2f} | R²: {r2:.2f}")
+
+    # Save model + encoders
+    joblib.dump(model, model_path)
+    joblib.dump(label_encoders, encoders_path)
+
+    print(f"💾 Updated model saved at: {model_path}")
+    print(f"💾 Updated encoders saved at: {encoders_path}")
