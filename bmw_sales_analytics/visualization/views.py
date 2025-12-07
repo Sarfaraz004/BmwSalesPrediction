@@ -68,6 +68,21 @@ def payment_success(request):
         car.purchase_date = timezone.now()
         car.payment_id = data['payment_id']
         car.save()
+    CarSale.objects.create(
+        model=data['model'],
+        year=timezone.now().year,
+        region='Asia',
+        color='Black',
+        fuel_type='Electric',
+        transmission='Automatic',
+        engine_size_l=2.0,
+        mileage_km=15.0,
+        price_usd=50000,
+        sales_volume=1,
+        sales_classification='Retail',
+        purchase_date=timezone.now(),
+        payment_id=data['payment_id']
+    )
     return JsonResponse({'status':'success'})
 
 

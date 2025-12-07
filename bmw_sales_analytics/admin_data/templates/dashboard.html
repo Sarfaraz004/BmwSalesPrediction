@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>BMW Global Sales Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body { font-family: Arial; background:#111; color:white; padding:20px; }
+.container { display:grid; grid-template-columns:1fr 1fr; gap:25px; }
+.card {
+    background:#1b1b1b; padding:20px; border-radius:14px;
+    box-shadow:0px 0px 15px rgba(255,255,255,0.05);
+}
+h2 { text-align:center; margin-bottom:15px; color:#00eaff; }
+canvas{ height:280px !important; }
+</style>
+</head>
+
+<body>
+<h2>BMW Global Analytics Dashboard</h2>
+
+<div class="container">
+
+<div class="card"><canvas id="priceModel"></canvas></div>
+<div class="card"><canvas id="salesYear"></canvas></div>
+<div class="card"><canvas id="regionSales"></canvas></div>
+<div class="card"><canvas id="classifyPie"></canvas></div>
+<div class="card"><canvas id="mileageScatter"></canvas></div>
+
+</div>
+
+<script>
+fetch("/basemode/dashboard/data/")
+.then(res => res.json())
+.then(data => {
+
+new Chart(priceModel, {
+    type:"bar",
+    data:{
+        labels:data.avg_price_by_model.map(d=>d.model),
+        datasets:[{label:"Avg Price ($)", data:data.avg_price_by_model.map(d=>d.avg_price)}]
+    }
+});
+
+new Chart(salesYear,{
+    type:"line",
+    data:{
+        labels:data.sales_by_year.map(d=>d.year),
+        datasets:[{label:"Sales Volume", data:data.sales_by_year.map(d=>d.total_sales), tension:0.4}]
+    }
+});
+
+new Chart(regionSales,{
+    type:"bar",
+    data:{
+        labels:data.sales_by_region.map(d=>d.region),
+        datasets:[{label:"Sales Volume", data:data.sales_by_region.map(d=>d.total_sales)}]
+    }
+});
+
+new Chart(classifyPie,{
+    type:"pie",
+    data:{
+        labels:data.classification_count.map(d=>d.sales_classification),
+        datasets:[{data:data.classification_count.map(d=>d.total)}]
+    }
+});
+
+new Chart(mileageScatter,{
+    type:"scatter",
+    data:{
+        datasets:[{
+            label:"Mileage vs Price", 
+            data:data.mileage_vs_price.map(r=>({x:r.mileage_km, y:r.price_usd}))
+        }]
+    }
+});
+
+});
+</script>
+</body>
+</html>

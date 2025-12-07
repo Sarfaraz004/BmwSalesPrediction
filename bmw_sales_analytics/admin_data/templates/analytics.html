@@ -1,61 +1,101 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>BMW Analytics Dashboard</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>BMW Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
 
-<h2>BMW Sales Analytics Dashboard</h2>
+    <h2>BMW Sales Analytics Dashboard</h2>
 
-<label>Select Model:</label>
-<select id="modelSelect">
-    <option value="">-- Choose Model --</option>
-    {% for m in models %}
+    <!-- Model Dropdown -->
+    <label>Select Model:</label>
+    <select id="modelSelect">
+        <option value="">-- Choose Model --</option>
+        {% for m in models %}
         <option value="{{ m }}">{{ m }}</option>
-    {% endfor %}
-</select>
+        {% endfor %}
+    </select>
 
-<hr><br>
+    <!-- Year Dropdown (dynamically filled) -->
+    <label>Select Year:</label>
+    <select id="yearSelect">
+        <option value="">-- Select Year --</option>
+    </select>
 
-<!-- Charts -->
-<canvas id="priceChart" height="100"></canvas><br>
-<canvas id="salesChart" height="100"></canvas><br>
-<canvas id="regionChart" height="100"></canvas><br>
+    <hr><br>
 
-<script>
-function loadCharts(model){
-    $.getJSON(`/basemode/analytics/data/${model}/`, function(data){
+    <!-- Charts -->
+    <canvas id="priceChart" height="100"></canvas><br>
+    <canvas id="salesChart" height="100"></canvas><br>
+    <canvas id="regionChart" height="100"></canvas><br>
 
-        // Price Over Years
-        new Chart(priceChart, {
-            type: 'line',
-            data: { labels:data.years, datasets:[{ label:"Price", data:data.prices }] }
+    <script>
+        let priceChartInstance, salesChartInstance, regionChartInstance;
+
+        function resetCharts() {
+            if (priceChartInstance) priceChartInstance.destroy();
+            if (salesChartInstance) salesChartInstance.destroy();
+            if (regionChartInstance) regionChartInstance.destroy();
+        }
+
+        /* Load years using same API (years_only=true) */
+        function loadYears(model) {
+            $.getJSON(`/basemode/analytics/data/${model}/?years_only=true`, function (data) {
+                $('#yearSelect').empty().append(`<option value="">-- Select Year --</option>`);
+                data.years.forEach(y => $('#yearSelect').append(`<option value="${y}">${y}</option>`));
+            });
+        }
+
+        /* Load charts → full data or year-wise from same API */
+        function loadCharts(model, year = null) {
+            let url = `/basemode/analytics/data/${model}/`;
+            if (year) url += `?year=${year}`;
+
+            $.getJSON(url, function (data) {
+
+                resetCharts(); // avoid chart overlap
+
+                priceChartInstance = new Chart(priceChart, {
+                    type: 'line',
+                    data: { labels: data.years, datasets: [{ label: "Price", data: data.prices }] }
+                });
+
+                salesChartInstance = new Chart(salesChart, {
+                    type: 'bar',
+                    data: { labels: data.years, datasets: [{ label: "Sales Volume", data: data.sales }] }
+                });
+
+                regionChartInstance = new Chart(regionChart, {
+                    type: 'pie',
+                    data: {
+                        labels: Object.keys(data.region_data),
+                        datasets: [{ data: Object.values(data.region_data) }]
+                    }
+                });
+            });
+        }
+
+        /* When model changes 👉 load years + full chart of model */
+        $('#modelSelect').change(function () {
+            let model = $(this).val();
+            if (model) {
+                loadYears(model);
+                loadCharts(model);
+            }
         });
 
-        // Sales Volume Trend
-        new Chart(salesChart, {
-            type: 'bar',
-            data: { labels:data.years, datasets:[{ label:"Sales Volume", data:data.sales }] }
+        /* When year changes 👉 show same model but only that year */
+        $('#yearSelect').change(function () {
+            let model = $('#modelSelect').val();
+            let year = $(this).val();
+            if (model) loadCharts(model, year);
         });
-
-        // Region Split
-        new Chart(regionChart, {
-            type:'pie',
-            data:{ labels:Object.keys(data.region_data),
-                   datasets:[{ data:Object.values(data.region_data) }] }
-        });
-
-    });
-}
-
-$('#modelSelect').change(function(){
-    let selectedModel = $(this).val();
-    if(selectedModel) loadCharts(selectedModel);
-});
-</script>
+    </script>
 
 </body>
+
 </html>
