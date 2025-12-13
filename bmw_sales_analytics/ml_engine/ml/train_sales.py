@@ -1,24 +1,26 @@
-from sklearn.ensemble import GradientBoostingRegressor
-import joblib
 from ml_engine.ml.utils import load_data, encode_data
+import joblib
+from sklearn.ensemble import GradientBoostingRegressor
 
-df = load_data()
-
-features = [
+FEATURES = [
     'model','year','region','price_usd',
     'fuel_type','engine_size_l'
 ]
 
-target = 'sales_volume'
-categorical = ['model','region','fuel_type']
+TARGET = 'sales_volume'
+CATEGORICAL = ['model','region','fuel_type']
 
-df, encoders = encode_data(df, categorical)
+df = load_data(required_columns=FEATURES + [TARGET])
 
-X = df[features]
-y = df[target]
+df, encoders = encode_data(df, CATEGORICAL)
+
+X = df[FEATURES]
+y = df[TARGET]
 
 model = GradientBoostingRegressor()
 model.fit(X, y)
 
 joblib.dump(model, 'ml_engine/ml/models/sales_model.pkl')
 joblib.dump(encoders, 'ml_engine/ml/models/sales_encoders.pkl')
+
+print(f"✅ Sales model trained on {len(df)} rows")
