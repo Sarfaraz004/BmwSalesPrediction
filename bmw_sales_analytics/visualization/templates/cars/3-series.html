@@ -6,6 +6,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <link rel="icon" href="{% static 'images/BMW-logo.png' %}" type="image/x-icon">
   <title>BMW Model Details</title>
   <style>
     * {
@@ -853,7 +854,7 @@
         <img id="mainCarImage" src="{% static 'images/3-series/main.jpeg' %}" alt="BMW Model" />
       </div>
       <div class="image-gallery">
-        <div class="gallery-item active" data-image="/placeholder.svg?height=800&width=1600">
+        <div class="gallery-item active" data-image="{% static 'images/3-series/exterior.jpeg' %}">
           <img src="{% static 'images/3-series/exterior.jpeg' %}" alt="Front View" />
           <span class="gallery-label">Exterior</span>
         </div>

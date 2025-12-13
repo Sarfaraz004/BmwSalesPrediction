@@ -151,3 +151,10 @@ def delete_user(request, user_id):
 
     user.delete()
     return redirect("/manage-users/")
+
+# Custom error handlers
+def custom_403(request, exception=None):
+    return render(request, "errors/403.html", status=403)
+
+def custom_404(request, exception=None):
+    return render(request, "errors/404.html", status=404)
