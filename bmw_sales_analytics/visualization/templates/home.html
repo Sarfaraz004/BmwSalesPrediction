@@ -698,38 +698,149 @@
                 padding: 60px 20px 30px;
             }
         }
+
         .dropdown {
-    position: relative;
-    display: inline-block;
-}
+            position: relative;
+            display: inline-block;
+        }
 
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background: white;
-    padding: 10px 14px;
-    border-radius: 6px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    top: 35px;
-    right: 0;
-    z-index: 100;
-}
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: white;
+            padding: 10px 14px;
+            border-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            top: 35px;
+            right: 0;
+            z-index: 100;
+        }
 
-.dropdown-content a {
-    text-decoration: none;
-    color: black;
-    font-size: 14px;
-    display: block;
-}
+        .dropdown-content a {
+            text-decoration: none;
+            color: black;
+            font-size: 14px;
+            display: block;
+        }
 
-.dropdown-content a:hover {
-    font-weight: bold;
-}
+        .dropdown-content a:hover {
+            font-weight: bold;
+        }
 
-.dropdown.show .dropdown-content {
-    display: block;
-}
+        .dropdown.show .dropdown-content {
+            display: block;
+        }
 
+        /* Contact Section */
+        .contact-section {
+            position: relative;
+            z-index: 2;
+            padding: 100px 60px;
+            background: rgba(0, 20, 50, 0.4);
+        }
+
+        .contact-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 50px;
+            margin-top: 60px;
+        }
+
+        .contact-info {
+            background: rgba(20, 30, 60, 0.5);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+        }
+
+        .contact-info h3 {
+            font-size: 24px;
+            color: var(--accent-blue);
+            margin-bottom: 15px;
+        }
+
+        .contact-info p {
+            color: var(--text-dim);
+            margin-bottom: 20px;
+        }
+
+        .contact-info ul {
+            list-style: none;
+        }
+
+        .contact-info li {
+            margin-bottom: 12px;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .contact-form {
+            background: rgba(20, 30, 60, 0.5);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 14px 16px;
+            background: rgba(5, 8, 16, 0.8);
+            border: 1px solid rgba(0, 168, 255, 0.3);
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 10px rgba(0, 168, 255, 0.3);
+        }
+
+        /* About Section */
+        .about-section {
+            position: relative;
+            z-index: 2;
+            padding: 100px 60px;
+            background: rgba(5, 8, 16, 0.6);
+        }
+
+        .about-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .about-card {
+            background: rgba(20, 30, 60, 0.5);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .about-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-blue);
+            box-shadow: 0 15px 40px rgba(0, 168, 255, 0.2);
+            background: rgba(0, 50, 100, 0.5);
+        }
+
+        .about-card h3 {
+            font-size: 22px;
+            color: var(--accent-blue);
+            margin-bottom: 15px;
+        }
+
+        .about-card p {
+            font-size: 15px;
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
     </style>
 </head>
 
@@ -742,28 +853,28 @@
         <div class="logo"><img src="{% static 'images/BMW-logo.png' %}" alt="BMW Logo"
                 style="height: 40px; vertical-align: middle;"> BMW</div>
         <nav>
-    <a href="#models">Models</a>
-    <a href="#features">Features</a>
-    <a href="#about">About</a>
-    <a href="#contact">Contact</a>
+            <a href="#models">Models</a>
+            <a href="#features">Features</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
 
-    <div class="nav-button">
+            <div class="nav-button">
 
-        {% if request.user.is_authenticated %}
-        <div class="dropdown" id="userDropdown">
-            <span class="welcome-text" onclick="toggleMenu()">Welcome {{ request.user.username }}</span>
+                {% if request.user.is_authenticated %}
+                <div class="dropdown" id="userDropdown">
+                    <span class="welcome-text" onclick="toggleMenu()">Welcome {{ request.user.username }}</span>
 
-            <div class="dropdown-content" id="dropdownMenu">
-                <a href="/logout/">Logout</a>
+                    <div class="dropdown-content" id="dropdownMenu">
+                        <a href="/logout/">Logout</a>
+                    </div>
+                </div>
+
+                {% else %}
+                <button onclick="window.location.href='/login/'">Login</button>
+                {% endif %}
+
             </div>
-        </div>
-
-        {% else %}
-        <button onclick="window.location.href='/login/'">Login</button>
-        {% endif %}
-
-    </div>
-</nav>
+        </nav>
 
 
     </header>
@@ -775,7 +886,7 @@
             <p class="hero-subtitle">Experience innovation, luxury, and performance combined into one remarkable
                 machine.</p>
             <div class="hero-buttons">
-                <button class="btn-primary">Explore Models</button>
+                <button class="btn-primary" onclick="window.location.href='/models/'">Explore Models</button>
                 <button class="btn-secondary">Learn More</button>
             </div>
             <div class="hero-features">
@@ -899,6 +1010,41 @@
             </div>
         </div>
     </section>
+    <!-- About Section -->
+    <section class="about-section" id="about">
+        <div class="section-title">
+            <h2>About <span>BMW</span></h2>
+            <p>Engineering excellence for over a century</p>
+        </div>
+
+        <div class="about-container">
+            <div class="about-card">
+                <h3>Who We Are</h3>
+                <p>
+                    Bayerische Motoren Werke (BMW) is a global leader in premium automobiles
+                    and mobility solutions. We combine cutting-edge technology, luxury design,
+                    and unmatched performance to create vehicles that inspire passion.
+                </p>
+            </div>
+
+            <div class="about-card">
+                <h3>Our Vision</h3>
+                <p>
+                    To shape the future of sustainable mobility by delivering innovative,
+                    intelligent, and emotionally engaging driving experiences across the globe.
+                </p>
+            </div>
+
+            <div class="about-card">
+                <h3>Our Legacy</h3>
+                <p>
+                    From motorsport dominance to luxury sedans and electric innovation,
+                    BMW has continuously redefined what driving pleasure truly means.
+                </p>
+            </div>
+        </div>
+    </section>
+
 
     <!-- CTA Section -->
     <section class="cta-section">
@@ -906,6 +1052,34 @@
         <p>Book a test drive today and feel the difference. Your journey to the future starts here.</p>
         <button class="btn-primary">Book Test Drive Now</button>
     </section>
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <div class="section-title">
+            <h2>Contact <span>Us</span></h2>
+            <p>We’d love to hear from you</p>
+        </div>
+
+        <div class="contact-container">
+            <div class="contact-info">
+                <h3>Get in Touch</h3>
+                <p>Have questions about our models, services, or test drives?</p>
+
+                <ul>
+                    <li><strong>Email:</strong> hussainjinabade65@gmail.com</li>
+                    <li><strong>Phone:</strong> +91 85499 85228</li>
+                    <li><strong>Location:</strong> BMW India Headquarters (AMC Bangalore)</li>
+                </ul>
+            </div>
+
+            <form class="contact-form">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea rows="5" placeholder="Your Message" required></textarea>
+                <button type="submit" class="btn-primary">Send Message</button>
+            </form>
+        </div>
+    </section>
+
 
     <!-- Footer -->
     <footer>
@@ -954,15 +1128,15 @@
 
     <script>
         function toggleMenu() {
-    document.getElementById("userDropdown").classList.toggle("show");
-}
+            document.getElementById("userDropdown").classList.toggle("show");
+        }
 
-// Close menu if user clicks anywhere outside
-window.onclick = function(e) {
-    if (!e.target.matches('.welcome-text')) {
-        document.getElementById("userDropdown").classList.remove("show");
-    }
-}
+        // Close menu if user clicks anywhere outside
+        window.onclick = function (e) {
+            if (!e.target.matches('.welcome-text')) {
+                document.getElementById("userDropdown").classList.remove("show");
+            }
+        }
         // Particle Animation
         const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext('2d');

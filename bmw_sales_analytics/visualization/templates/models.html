@@ -18,7 +18,8 @@
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: #050a15; /* same as login */
+      background: #344cec;
+      /* same as login */
       color: #e9f1ff;
       overflow-x: hidden;
     }
@@ -257,12 +258,125 @@
         flex-direction: column;
       }
     }
+
+    /* ============================
+   MODERN BMW ADMIN NAVBAR (Centered Links)
+============================ */
+    .admin-navbar {
+      width: 100%;
+      padding: 14px 28px;
+      background: #0b1220;
+      color: #ffffff;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    /* Left: Logo + Title */
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* CENTER the navbar links */
+    .nav-center {
+      display: flex;
+      justify-content: center;
+      flex: 1;
+      /* makes the center area expand */
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    /* Links */
+    .nav-links a {
+      color: #d7e2ff;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: 0.2s;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* Logout on right */
+    .logout-btn {
+      margin-right: 2.8rem;
+      color: #ff5f5f !important;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 6px 12px;
+      border: 1px solid rgba(255, 90, 90, 0.5);
+      border-radius: 6px;
+    }
+
+    .logout-btn:hover {
+      background: #ff4d4d;
+      color: #fff !important;
+    }
+
+    /* LOGO */
+    .nav-logo {
+      width: 42px;
+      filter: drop-shadow(0 0 4px #007bff55);
+    }
+
+    /* Responsive */
+    @media (max-width: 850px) {
+      .admin-navbar {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .nav-center {
+        width: 100%;
+        justify-content: center;
+        margin-top: 8px;
+      }
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- Animated Background -->
+  {% if request.user.is_authenticated and request.user.is_staff or request.user.is_superuser %}
+  <nav class="admin-navbar">
+
+    <!-- LEFT: BMW Logo -->
+    <div class="nav-left">
+      <img src="{% static 'images/BMW-logo.png' %}" class="nav-logo" alt="BMW">
+    </div>
+
+    <!-- CENTER: Navbar Links -->
+    <div class="nav-center">
+      <div class="nav-links">
+        <a href="/basemode/dashboard/">Dashboard</a>
+        <a href="/basemode/analytics/">Analytics</a>
+        <a href="/basemode/graphs/">Graphs</a>
+        <a href="/basemode/manage-users/">Users</a>
+      </div>
+    </div>
+
+    <!-- RIGHT: Logout -->
+    <a href="/logout/" class="logout-btn">Logout</a>
+
+  </nav>
+  {% endif %}
+
+
   <div class="bg-animate"></div>
 
   <div class="wrap">
@@ -286,10 +400,18 @@
         <p id="detailDesc" style="color:#a8c6ff; margin-top:8px;"></p>
 
         <div class="specs">
-          <div><strong>Engine:</strong> <div id="specEngine"></div></div>
-          <div><strong>HP:</strong> <div id="specHP"></div></div>
-          <div><strong>Top Speed:</strong> <div id="specTop"></div></div>
-          <div><strong>Price (INR):</strong> <div id="specPrice"></div></div>
+          <div><strong>Engine:</strong>
+            <div id="specEngine"></div>
+          </div>
+          <div><strong>HP:</strong>
+            <div id="specHP"></div>
+          </div>
+          <div><strong>Top Speed:</strong>
+            <div id="specTop"></div>
+          </div>
+          <div><strong>Price (INR):</strong>
+            <div id="specPrice"></div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>User Management</title>
+    <style>
+        body {
+            font-family: Poppins, sans-serif;
+            background: #f4f6f8;
+            padding: 30px;
+        }
+
+        table {
+            width: 100%;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #007bff;
+            color: white;
+        }
+
+        form.search-box {
+            margin-bottom: 20px;
+        }
+
+        .save-btn {
+            padding: 6px 14px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .save-btn:hover {
+            background: #218838;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+        }
+
+        .delete-btn {
+            padding: 6px 14px;
+            background: #dc3545;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            margin-left: 6px;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>User Management (Superuser Only)</h2>
+
+    <form class="search-box" method="get">
+        <input type="text" name="search" placeholder="Search users..." value="{{ search_query }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Is Staff</th>
+            <th>Is Superuser</th>
+            <th>Action</th>
+        </tr>
+
+        {% for u in users %}
+        <tr>
+            <form method="post" action="{% url 'update_user_permissions' u.id %}">
+                {% csrf_token %}
+
+                <td>{{ u.username }}</td>
+                <td>{{ u.email }}</td>
+
+                <td>
+                    <input class="checkbox" type="checkbox" name="is_staff" {% if u.is_staff %}checked{% endif %}>
+                </td>
+
+                <td>
+                    <input class="checkbox" type="checkbox" name="is_superuser" {% if u.is_superuser %}checked{% endif%}>
+                </td>
+
+                <td>
+                    <button class="save-btn" type="submit">Save</button>
+
+                    {% if request.user.id != u.id %}
+                    <a href="{% url 'delete_user' u.id %}"
+                        onclick="return confirm('Are you sure you want to delete this user?');" class="delete-btn">
+                        Delete
+                    </a>
+                    {% endif %}
+                </td>
+
+            </form>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+</body>
+
+</html>
