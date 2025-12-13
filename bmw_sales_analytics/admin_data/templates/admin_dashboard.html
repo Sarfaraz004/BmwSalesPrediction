@@ -1,7 +1,9 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
+
 <head>
+    <link rel="icon" href="{% static 'images/BMW-logo.png' %}" type="image/x-icon">
     <title>BMW Admin Dashboard</title>
 
     <!-- DataTables -->
@@ -28,15 +30,21 @@
             width: 200%;
             height: 200%;
             background: radial-gradient(circle at 20% 30%, #1616db55 0%, transparent 50%),
-                        radial-gradient(circle at 80% 70%, #0008ff44 0%, transparent 50%),
-                        radial-gradient(circle at 50% 90%, #272ae633 0%, transparent 50%);
+                radial-gradient(circle at 80% 70%, #0008ff44 0%, transparent 50%),
+                radial-gradient(circle at 50% 90%, #272ae633 0%, transparent 50%);
             filter: blur(55px);
             animation: moveBg 12s infinite alternate ease-in-out;
             z-index: -1;
         }
+
         @keyframes moveBg {
-            0% { transform: translate(-5%, -4%); }
-            100% { transform: translate(5%, 4%); }
+            0% {
+                transform: translate(-5%, -4%);
+            }
+
+            100% {
+                transform: translate(5%, 4%);
+            }
         }
 
         /* -----------------------------------
@@ -56,17 +64,17 @@
         .table-container {
             width: 95%;
             margin: 40px auto;
-            background: rgba(255,255,255,0.10);
+            background: rgba(255, 255, 255, 0.10);
             backdrop-filter: blur(15px);
             padding: 25px;
             border-radius: 18px;
             box-shadow: 0 0 25px #006bff44;
-            border: 1px solid rgba(255,255,255,0.18);
+            border: 1px solid rgba(255, 255, 255, 0.18);
         }
 
         /* DataTable Header */
         table.dataTable thead th {
-            background: rgba(0,102,255,0.2);
+            background: rgba(0, 102, 255, 0.2);
             color: #cfeaff !important;
             font-weight: 600;
             text-shadow: 0 0 4px #008cff;
@@ -74,12 +82,12 @@
 
         /* DataTable Rows */
         table.dataTable tbody tr {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             color: #e9f1ff;
         }
 
         table.dataTable tbody tr:hover {
-            background: rgba(0,129,255,0.22);
+            background: rgba(0, 129, 255, 0.22);
             transition: 0.3s;
         }
 
@@ -95,21 +103,24 @@
             text-align: center;
             margin-top: 20px;
         }
+
         .pagination a {
             padding: 8px 15px;
             margin: 4px;
             border-radius: 8px;
-            background: rgba(255,255,255,0.12);
+            background: rgba(255, 255, 255, 0.12);
             color: #8dc9ff;
             text-decoration: none;
             transition: .3s;
-            border: 1px solid rgba(255,255,255,0.18);
+            border: 1px solid rgba(255, 255, 255, 0.18);
         }
+
         .pagination a:hover {
             background: #008cff;
             color: white;
             box-shadow: 0 0 12px #009dff;
         }
+
         .step-links span {
             color: #6bb7ff;
             font-weight: 600;
@@ -118,15 +129,17 @@
         /* DataTables Pagination Theme */
         .dataTables_wrapper .dataTables_paginate a {
             color: #8dc9ff !important;
-            background: rgba(255,255,255,0.12) !important;
+            background: rgba(255, 255, 255, 0.12) !important;
             border-radius: 6px;
             padding: 6px 12px;
-            border: 1px solid rgba(255,255,255,0.18) !important;
+            border: 1px solid rgba(255, 255, 255, 0.18) !important;
         }
+
         .dataTables_wrapper .dataTables_paginate a:hover {
             background: #008cff !important;
             color: white !important;
         }
+
         .dataTables_wrapper .dataTables_paginate .current {
             background: #008cff !important;
             color: #fff !important;
@@ -135,8 +148,8 @@
 
         /* Search Box */
         .dataTables_filter input {
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.22);
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.22);
             color: #e9f1ff;
             padding: 6px 10px;
             border-radius: 6px;
@@ -202,15 +215,15 @@
     <div class="pagination">
         <span class="step-links">
             {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; First</a>
-                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            <a href="?page=1">&laquo; First</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
             {% endif %}
-    
+
             <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-    
+
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
             {% endif %}
         </span>
     </div>
@@ -225,4 +238,5 @@
     </script>
 
 </body>
+
 </html>

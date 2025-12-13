@@ -1,142 +1,146 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>BMW Global Sales Dashboard</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
+    <title>BMW Global Sales Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="icon" href="{% static 'images/BMW-logo.png' %}" type="image/x-icon">
     <style>
-/* ===== Reset ===== */
-* {
-    box-sizing: border-box;
-}
+        /* ===== Reset ===== */
+        * {
+            box-sizing: border-box;
+        }
 
-/* ===== Page ===== */
-body {
-    margin: 0;
-    padding: 30px;
-    font-family: "Segoe UI", Tahoma, sans-serif;
-    background: linear-gradient(135deg, #050810, #0a0e27);
-    color: #e0e0e0;
-}
+        /* ===== Page ===== */
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background: linear-gradient(135deg, #050810, #0a0e27);
+            color: #e0e0e0;
+        }
 
-/* ===== Title ===== */
-h2 {
-    text-align: center;
-    margin-bottom: 40px;
-    font-size: 30px;
-    font-weight: 700;
-    background: linear-gradient(135deg, #1c69d4, #00d4ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
+        /* ===== Title ===== */
+        h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 30px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1c69d4, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-/* ===== Layout ===== */
-.container {
-    max-width: 1400px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 👈 2 per row */
-    gap: 30px;
-}
+        /* ===== Layout ===== */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            /* 👈 2 per row */
+            gap: 30px;
+        }
 
 
-/* ===== Chart Cards ===== */
-.card {
-    background: rgba(20, 30, 60, 0.6);
-    border: 1px solid rgba(0, 168, 255, 0.2);
-    border-radius: 18px;
-    padding: 25px;
-    box-shadow: 0 12px 35px rgba(0, 168, 255, 0.15);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+        /* ===== Chart Cards ===== */
+        .card {
+            background: rgba(20, 30, 60, 0.6);
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 12px 35px rgba(0, 168, 255, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-.card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 18px 45px rgba(0, 168, 255, 0.25);
-}
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 45px rgba(0, 168, 255, 0.25);
+        }
 
-/* ===== Canvas ===== */
-canvas {
-    width: 100% !important;
-    height: 320px !important;
-}
+        /* ===== Canvas ===== */
+        canvas {
+            width: 100% !important;
+            height: 320px !important;
+        }
 
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
-    canvas {
-        height: 260px !important;
-    }
-}
-.pie-card canvas {
-    height: 35vh;
-    width: 25vw;
-}
-</style>
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            canvas {
+                height: 260px !important;
+            }
+        }
+
+        .pie-card canvas {
+            height: 35vh;
+            width: 25vw;
+        }
+    </style>
 </head>
 
 <body>
-<h2>BMW Global Analytics Dashboard</h2>
+    <h2>BMW Global Analytics Dashboard</h2>
 
-<div class="container">
+    <div class="container">
 
-<div class="card"><canvas id="priceModel"></canvas></div>
-<div class="card"><canvas id="salesYear"></canvas></div>
-<div class="card"><canvas id="regionSales"></canvas></div>
-<div class="card pie-card">
-    <canvas id="classifyPie"></canvas>
-</div>
-<div class="card"><canvas id="mileageScatter"></canvas></div>
+        <div class="card"><canvas id="priceModel"></canvas></div>
+        <div class="card"><canvas id="salesYear"></canvas></div>
+        <div class="card"><canvas id="regionSales"></canvas></div>
+        <div class="card pie-card">
+            <canvas id="classifyPie"></canvas>
+        </div>
+        <div class="card"><canvas id="mileageScatter"></canvas></div>
 
-</div>
+    </div>
 
-<script>
-fetch("/basemode/dashboard/data/")
-.then(res => res.json())
-.then(data => {
+    <script>
+        fetch("/basemode/dashboard/data/")
+            .then(res => res.json())
+            .then(data => {
 
-new Chart(priceModel, {
-    type:"bar",
-    data:{
-        labels:data.avg_price_by_model.map(d=>d.model),
-        datasets:[{label:"Avg Price ($)", data:data.avg_price_by_model.map(d=>d.avg_price)}]
-    }
-});
+                new Chart(priceModel, {
+                    type: "bar",
+                    data: {
+                        labels: data.avg_price_by_model.map(d => d.model),
+                        datasets: [{ label: "Avg Price ($)", data: data.avg_price_by_model.map(d => d.avg_price) }]
+                    }
+                });
 
-new Chart(salesYear,{
-    type:"line",
-    data:{
-        labels:data.sales_by_year.map(d=>d.year),
-        datasets:[{label:"Sales Volume", data:data.sales_by_year.map(d=>d.total_sales), tension:0.4}]
-    }
-});
+                new Chart(salesYear, {
+                    type: "line",
+                    data: {
+                        labels: data.sales_by_year.map(d => d.year),
+                        datasets: [{ label: "Sales Volume", data: data.sales_by_year.map(d => d.total_sales), tension: 0.4 }]
+                    }
+                });
 
-new Chart(regionSales,{
-    type:"bar",
-    data:{
-        labels:data.sales_by_region.map(d=>d.region),
-        datasets:[{label:"Sales Volume", data:data.sales_by_region.map(d=>d.total_sales)}]
-    }
-});
+                new Chart(regionSales, {
+                    type: "bar",
+                    data: {
+                        labels: data.sales_by_region.map(d => d.region),
+                        datasets: [{ label: "Sales Volume", data: data.sales_by_region.map(d => d.total_sales) }]
+                    }
+                });
 
-new Chart(classifyPie,{
-    type:"pie",
-    data:{
-        labels:data.classification_count.map(d=>d.sales_classification),
-        datasets:[{data:data.classification_count.map(d=>d.total)}]
-    }
-});
+                new Chart(classifyPie, {
+                    type: "pie",
+                    data: {
+                        labels: data.classification_count.map(d => d.sales_classification),
+                        datasets: [{ data: data.classification_count.map(d => d.total) }]
+                    }
+                });
 
-new Chart(mileageScatter,{
-    type:"scatter",
-    data:{
-        datasets:[{
-            label:"Mileage vs Price", 
-            data:data.mileage_vs_price.map(r=>({x:r.mileage_km, y:r.price_usd}))
-        }]
-    }
-});
+                new Chart(mileageScatter, {
+                    type: "scatter",
+                    data: {
+                        datasets: [{
+                            label: "Mileage vs Price",
+                            data: data.mileage_vs_price.map(r => ({ x: r.mileage_km, y: r.price_usd }))
+                        }]
+                    }
+                });
 
-});
-</script>
+            });
+    </script>
 </body>
+
 </html>

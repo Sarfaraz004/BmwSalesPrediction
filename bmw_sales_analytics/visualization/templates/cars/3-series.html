@@ -15,7 +15,7 @@
     }
 
     body {
-      font-family: "BMW Helvetica", "Helvetica Neue", Arial, sans-serif;
+      font-family: 'Times New Roman', Times, serif;
       background: #000000;
       color: #ffffff;
       overflow-x: hidden;
@@ -850,23 +850,23 @@
   <section id="car-showcase" class="car-showcase">
     <div class="showcase-container">
       <div class="car-image-main">
-        <img id="mainCarImage" src="images/X5.png" alt="BMW Model" />
+        <img id="mainCarImage" src="{% static 'images/3-series/main.jpeg' %}" alt="BMW Model" />
       </div>
       <div class="image-gallery">
         <div class="gallery-item active" data-image="/placeholder.svg?height=800&width=1600">
-          <img src="/placeholder.svg?height=200&width=300" alt="Front View" />
+          <img src="{% static 'images/3-series/exterior.jpeg' %}" alt="Front View" />
           <span class="gallery-label">Exterior</span>
         </div>
         <div class="gallery-item" data-image="/placeholder.svg?height=800&width=1600">
-          <img src="/placeholder.svg?height=200&width=300" alt="Interior" />
+          <img src="{% static 'images/3-series/interior.jpeg' %}" alt="Interior" />
           <span class="gallery-label">Interior</span>
         </div>
         <div class="gallery-item" data-image="/placeholder.svg?height=800&width=1600">
-          <img src="/placeholder.svg?height=200&width=300" alt="Side View" />
+          <img src="{% static 'images/3-series/side.jpeg' %}" alt="Side View" />
           <span class="gallery-label">Profile</span>
         </div>
         <div class="gallery-item" data-image="/placeholder.svg?height=800&width=1600">
-          <img src="/placeholder.svg?height=200&width=300" alt="Rear View" />
+          <img src="{% static 'images/3-series/rear.jpeg' %}" alt="Rear View" />
           <span class="gallery-label">Rear</span>
         </div>
       </div>
@@ -951,7 +951,7 @@
       <div class="features-grid">
         <div class="feature-item">
           <div class="feature-image">
-            <img src="/placeholder.svg?height=500&width=700" alt="iDrive" />
+            <img src="{% static 'images/3-series/screen.jpeg' %}" alt="iDrive" />
           </div>
           <div class="feature-content">
             <h3>BMW iDrive 8.0</h3>
@@ -967,7 +967,7 @@
 
         <div class="feature-item reverse">
           <div class="feature-image">
-            <img src="/placeholder.svg?height=500&width=700" alt="Driving Assistant" />
+            <img src="{% static 'images/3-series/brakes.jpeg' %}" alt="Driving Assistant" />
           </div>
           <div class="feature-content">
             <h3>Driving Assistant Professional</h3>
@@ -983,7 +983,7 @@
 
         <div class="feature-item">
           <div class="feature-image">
-            <img src="/placeholder.svg?height=500&width=700" alt="Interior" />
+            <img src="{% static 'images/3-series/interior.jpeg' %}" alt="Interior" />
           </div>
           <div class="feature-content">
             <h3>Luxury Interior</h3>

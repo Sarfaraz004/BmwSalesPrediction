@@ -466,6 +466,49 @@
       width: 42px;
       filter: drop-shadow(0 0 4px #007bff55);
     }
+
+    /* Dropdown */
+    /* ===== Dropdown ===== */
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-toggle {
+      cursor: pointer;
+    }
+
+    /* Menu */
+    .dropdown-menu {
+      position: absolute;
+      top: 40px;
+      left: 0;
+      background: #ffffff;
+      min-width: 220px;
+      border-radius: 10px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 999;
+    }
+
+    /* Links */
+    .dropdown-menu a {
+      padding: 12px 16px;
+      text-decoration: none;
+      color: #1c69d4;
+      font-weight: 500;
+      transition: background 0.25s ease;
+    }
+
+    .dropdown-menu a:hover {
+      background: rgba(28, 105, 212, 0.08);
+    }
+
+    /* Active */
+    .dropdown-menu.show {
+      display: flex;
+    }
   </style>
 </head>
 
@@ -481,6 +524,18 @@
         <a href="/basemode/analytics/">Analytics</a>
         <a href="/basemode/graphs/">Graphs</a>
         <a href="/basemode/manage-users/">Users</a>
+        <div class="dropdown">
+          <a href="javascript:void(0)" class="dropdown-toggle" onclick="togglePrediction()">
+            Prediction ▾
+          </a>
+
+          <div class="dropdown-menu" id="predictionMenu">
+            <a href="/ml_engine/price/">Price Prediction</a>
+            <a href="/ml_engine/sales/">Sales Volume Prediction</a>
+            <a href="/ml_engine/likelihood/">Purchase Likelihood</a>
+          </div>
+        </div>
+
       </div>
     </div>
     <a href="/logout/" class="logout-btn">Logout</a>
@@ -805,6 +860,18 @@
         }
       }
     })
+
+    function togglePrediction() {
+      document.getElementById("predictionMenu").classList.toggle("show");
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", function (e) {
+      const dropdown = document.querySelector(".dropdown");
+      if (!dropdown.contains(e.target)) {
+        document.getElementById("predictionMenu").classList.remove("show");
+      }
+    });
 
   </script>
 </body>

@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>User Management</title>
+    <link rel="icon" href="{% static 'images/BMW-logo.png' %}" type="image/x-icon">
 
     <style>
         /* ===== Global ===== */
@@ -34,15 +36,15 @@
             padding: 10px 14px;
             width: 260px;
             border-radius: 8px;
-            border: 1px solid rgba(0,168,255,0.4);
-            background: rgba(20,30,60,0.9);
+            border: 1px solid rgba(0, 168, 255, 0.4);
+            background: rgba(20, 30, 60, 0.9);
             color: #fff;
         }
 
         .search-box input:focus {
             outline: none;
             border-color: #00d4ff;
-            box-shadow: 0 0 10px rgba(0,212,255,0.4);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
         }
 
         .search-box button {
@@ -61,19 +63,20 @@
             max-width: 1200px;
             margin: auto;
             border-collapse: collapse;
-            background: rgba(20,30,60,0.6);
+            background: rgba(20, 30, 60, 0.6);
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 12px 35px rgba(0,168,255,0.15);
+            box-shadow: 0 12px 35px rgba(0, 168, 255, 0.15);
         }
 
-        th, td {
+        th,
+        td {
             padding: 14px 16px;
             text-align: center;
         }
 
         th {
-            background: rgba(0,40,90,0.8);
+            background: rgba(0, 40, 90, 0.8);
             font-size: 14px;
             letter-spacing: 0.5px;
             text-transform: uppercase;
@@ -81,11 +84,11 @@
         }
 
         tr {
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         tr:hover {
-            background: rgba(0,60,120,0.3);
+            background: rgba(0, 60, 120, 0.3);
         }
 
         /* ===== Checkboxes ===== */
@@ -109,7 +112,7 @@
         }
 
         .save-btn:hover {
-            box-shadow: 0 6px 15px rgba(0,212,255,0.4);
+            box-shadow: 0 6px 15px rgba(0, 212, 255, 0.4);
         }
 
         .delete-btn {
@@ -122,12 +125,18 @@
         }
 
         .delete-btn:hover {
-            box-shadow: 0 6px 15px rgba(255,82,82,0.4);
+            box-shadow: 0 6px 15px rgba(255, 82, 82, 0.4);
         }
 
         /* ===== Responsive ===== */
         @media (max-width: 900px) {
-            table, thead, tbody, th, td, tr {
+
+            table,
+            thead,
+            tbody,
+            th,
+            td,
+            tr {
                 font-size: 13px;
             }
 
@@ -140,55 +149,54 @@
 
 <body>
 
-<h2>User Management (Superuser Only)</h2>
+    <h2>User Management (Superuser Only)</h2>
 
-<form class="search-box" method="get">
-    <input type="text" name="search" placeholder="Search users..." value="{{ search_query }}">
-    <button type="submit">Search</button>
-</form>
+    <form class="search-box" method="get">
+        <input type="text" name="search" placeholder="Search users..." value="{{ search_query }}">
+        <button type="submit">Search</button>
+    </form>
 
-<table>
-    <tr>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Staff</th>
-        <th>Superuser</th>
-        <th>Action</th>
-    </tr>
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Staff</th>
+            <th>Superuser</th>
+            <th>Action</th>
+        </tr>
 
-    {% for u in users %}
-    <tr>
-        <form method="post" action="{% url 'update_user_permissions' u.id %}">
-            {% csrf_token %}
+        {% for u in users %}
+        <tr>
+            <form method="post" action="{% url 'update_user_permissions' u.id %}">
+                {% csrf_token %}
 
-            <td>{{ u.username }}</td>
-            <td>{{ u.email }}</td>
+                <td>{{ u.username }}</td>
+                <td>{{ u.email }}</td>
 
-            <td>
-                <input class="checkbox" type="checkbox" name="is_staff"
-                       {% if u.is_staff %}checked{% endif %}>
-            </td>
+                <td>
+                    <input class="checkbox" type="checkbox" name="is_staff" {% if u.is_staff %}checked{% endif %}>
+                </td>
 
-            <td>
-                <input class="checkbox" type="checkbox" name="is_superuser"
-                       {% if u.is_superuser %}checked{% endif %}>
-            </td>
+                <td>
+                    <input class="checkbox" type="checkbox" name="is_superuser" {% if u.is_superuser %}checked{% endif
+                        %}>
+                </td>
 
-            <td>
-                <button class="save-btn" type="submit">Save</button>
+                <td>
+                    <button class="save-btn" type="submit">Save</button>
 
-                {% if request.user.id != u.id %}
-                <a href="{% url 'delete_user' u.id %}"
-                   onclick="return confirm('Are you sure you want to delete this user?');"
-                   class="delete-btn">
-                    Delete
-                </a>
-                {% endif %}
-            </td>
-        </form>
-    </tr>
-    {% endfor %}
-</table>
+                    {% if request.user.id != u.id %}
+                    <a href="{% url 'delete_user' u.id %}"
+                        onclick="return confirm('Are you sure you want to delete this user?');" class="delete-btn">
+                        Delete
+                    </a>
+                    {% endif %}
+                </td>
+            </form>
+        </tr>
+        {% endfor %}
+    </table>
 
 </body>
+
 </html>

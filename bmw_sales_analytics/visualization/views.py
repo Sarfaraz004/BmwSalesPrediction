@@ -9,35 +9,54 @@ from django.contrib.auth.decorators import login_required
 def home(request):
     return render(request, 'home.html')
 
-# Signup View
 def signup_view(request):
     error = None
 
     if request.method == "POST":
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '')
 
-        # Password validations
-        if len(password) < 6:
-            error = 'Password must be at least 6 characters long'
-        elif not any(char.isdigit() for char in password):
-            error = 'Password must contain at least one number'
-        elif not any(char.isupper() for char in password):
-            error = 'Password must contain at least one uppercase letter'
-        elif not any(char in '!@#$%^&*()_+' for char in password):
-            error = 'Password must contain at least one special character'
+        # ===== Basic checks =====
+        if not username or not email or not password:
+            error = "All fields are required."
+
+        # ===== Username check =====
         elif User.objects.filter(username=username).exists():
-            error = 'Username already exists'
-        elif User.objects.filter(email=email).exists():
-            error = 'Email already registered'
+            error = "Username already exists."
 
+        # ===== Email checks =====
+        elif not email.endswith("@gmail.com"):
+            error = "Only @gmail.com email addresses are allowed."
+
+        elif User.objects.filter(email=email).exists():
+            error = "Email is already registered."
+
+        # ===== Password validations =====
+        elif len(password) < 6:
+            error = "Password must be at least 6 characters long."
+
+        elif not any(char.isdigit() for char in password):
+            error = "Password must contain at least one number."
+
+        elif not any(char.isupper() for char in password):
+            error = "Password must contain at least one uppercase letter."
+
+        elif not re.search(r"[!@#$%^&*()_+=\-{}[\]:;\"'<>,.?/]", password):
+            error = "Password must contain at least one special character."
+
+        # ===== Create user =====
         if not error:
-            user = User.objects.create_user(username=username, email=email, password=password)
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password
+            )
             user.save()
             return redirect('login')
 
     return render(request, 'signup.html', {"error": error})
+
 
 
 # Login View
