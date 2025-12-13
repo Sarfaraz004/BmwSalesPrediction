@@ -68,6 +68,13 @@ def redirect_home(request):
 def models_page(request):
     return render(request, 'models.html', {'razorpay_key_id': settings.RAZORPAY_KEY_ID})
 
+@login_required(login_url='/login/')
+def car_detail(request, model_name):
+    return render(request, f"cars/{model_name}.html", {
+        "model": model_name,
+        "razorpay_key_id": settings.RAZORPAY_KEY_ID
+    })
+
 
 # Payment Gateway Views
 # views.py
@@ -81,27 +88,27 @@ import json
 @csrf_exempt
 def payment_success(request):
     data = json.loads(request.body)
-    car = CarSale.objects.filter(model=data['model']).first()
-    if car:
-        car.purchase_date = timezone.now()
-        car.payment_id = data['payment_id']
-        car.save()
-    CarSale.objects.create(
+
+    CarSale.objects.update_or_create(
         model=data['model'],
-        year=timezone.now().year,
-        region='Asia',
-        color='Black',
-        fuel_type='Electric',
-        transmission='Automatic',
-        engine_size_l=2.0,
-        mileage_km=15.0,
-        price_usd=50000,
-        sales_volume=1,
-        sales_classification='Retail',
-        purchase_date=timezone.now(),
-        payment_id=data['payment_id']
+        defaults={
+            "year": timezone.now().year,
+            "region": "Asia",
+            "color": "Black",
+            "fuel_type": "Electric",
+            "transmission": "Automatic",
+            "engine_size_l": 2.0,
+            "mileage_km": 15.0,
+            "price_usd": data['price'],
+            "sales_volume": 1,
+            "sales_classification": "Retail",
+            "purchase_date": timezone.now(),
+            "payment_id": data['payment_id']
+        }
     )
-    return JsonResponse({'status':'success'})
+
+    return JsonResponse({"status": "success"})
+
 
 
 # views.py
@@ -113,9 +120,11 @@ client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_S
 
 @csrf_exempt
 def create_order(request):
-    import razorpay, json
     data = json.loads(request.body)
-    amount = int(data['amount']) * 100  # amount in paise
-    order_currency = 'INR'
-    order = client.order.create(dict(amount=amount, currency=order_currency, payment_capture='1'))
+    amount = int(data['amount'])
+    order = client.order.create({
+        "amount": amount,
+        "currency": "INR",
+        "payment_capture": 1
+    })
     return JsonResponse(order)

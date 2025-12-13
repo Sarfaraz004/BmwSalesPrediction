@@ -12,4 +12,5 @@ urlpatterns = [
     # payment gateway
     path('create_order/', views.create_order),
     path('payment_success/', views.payment_success),
+    path('<slug:model_name>/', views.car_detail, name='car_detail'),
 ]

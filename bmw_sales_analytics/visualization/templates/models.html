@@ -40,7 +40,7 @@
       position: fixed;
       top: 0;
       width: 100%;
-      background: rgba(10, 14, 39, 0.95);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
       box-shadow: 0 4px 20px rgba(0, 168, 255, 0.25);
       z-index: 1000;
@@ -71,7 +71,7 @@
     }
 
     .nav-menu li a {
-      color: #e0e0e0;
+      color: #000000;
       text-decoration: none;
       padding: 8px 16px;
       border-radius: 8px;
@@ -263,7 +263,7 @@
     }
 
     .connection-line {
-      stroke: rgba(0, 212, 255, 0.7);
+      stroke: rgba(255, 255, 255, 0.7);
       stroke-width: 3;
       fill: none;
       stroke-linecap: round;
@@ -396,10 +396,11 @@
    MODERN BMW ADMIN NAVBAR (Centered Links)
 ============================ */
     .admin-navbar {
+      margin-top: -100px;
       width: 100%;
       padding: 14px 28px;
-      background: #0b1220;
-      color: #ffffff;
+      background: #f0f0f0;
+      color: #130000;
 
       display: flex;
       justify-content: space-between;
@@ -423,7 +424,6 @@
       display: flex;
       justify-content: center;
       flex: 1;
-      /* makes the center area expand */
     }
 
     .nav-links {
@@ -433,16 +433,16 @@
 
     /* Links */
     .nav-links a {
-      color: #d7e2ff;
+      color: #000000;
       text-decoration: none;
-      font-weight: 500;
+      font-weight: 600;
       padding: 6px 12px;
       border-radius: 6px;
       transition: 0.2s;
     }
 
     .nav-links a:hover {
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(0, 0, 0, 0.12);
     }
 
     /* Logout on right */
@@ -470,16 +470,11 @@
 </head>
 
 <body>
-  <!-- Added BMW-branded navbar -->
   {% if request.user.is_authenticated and request.user.is_staff or request.user.is_superuser %}
   <nav class="admin-navbar">
-
-    <!-- LEFT: BMW Logo -->
     <div class="nav-left">
       <img src="{% static 'images/BMW-logo.png' %}" class="nav-logo" alt="BMW">
     </div>
-
-    <!-- CENTER: Navbar Links -->
     <div class="nav-center">
       <div class="nav-links">
         <a href="/basemode/dashboard/">Dashboard</a>
@@ -488,10 +483,7 @@
         <a href="/basemode/manage-users/">Users</a>
       </div>
     </div>
-
-    <!-- RIGHT: Logout -->
     <a href="/logout/" class="logout-btn">Logout</a>
-
   </nav>
 
   {% else %}
@@ -502,10 +494,10 @@
       </div>
 
       <ul class="nav-menu">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#models">Models</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="/">Home</a></li>
+        <li><a href="">Models</a></li>
+        <li><a href="/drive">Drive</a></li>
+        <li><a href="/logout/">Logout</a></li>
       </ul>
     </div>
   </nav>
@@ -561,20 +553,20 @@
         <div class="model-group" data-group="sedan">
           <div class="models-container">
             <!-- Updated all sedan models to link to car details page -->
-            <div class="node model-node" data-url="car-details.html?model=3-series">
+            <div class="node model-node" data-url="/3-series/">
               <div class="node-label">3 Series</div>
             </div>
-            <div class="node model-node" data-url="car-details.html?model=5-series">
+            <div class="node model-node" data-url="/cars/5-series/">
               <div class="node-label">5 Series</div>
             </div>
-            <div class="node model-node" data-url="car-details.html?model=7-series">
+            <div class="node model-node" data-url="/cars/7-series/">
               <div class="node-label">7 Series</div>
             </div>
-            <div class="node model-node" data-url="car-details.html?model=m3">
+            <div class="node model-node" data-url="/cars/m3/">
               <div class="node-label">M3</div>
             </div>
             <!-- Added M5 as a sedan model -->
-            <div class="node model-node" data-url="car-details.html?model=m5">
+            <div class="node model-node" data-url="/cars/m5/">
               <div class="node-label">M5</div>
             </div>
           </div>
