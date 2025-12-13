@@ -1,0 +1,13 @@
+<h2>Purchase Likelihood</h2>
+<form method="post">{% csrf_token %}
+  <input name="model">
+  <input name="price_usd">
+  <input name="region">
+  <input name="fuel_type">
+  <input name="engine_size_l">
+  <button>Check</button>
+</form>
+
+{% if prob %}
+<h3>Likelihood of High Purchase: {{ prob|floatformat:2 }}%</h3>
+{% endif %}

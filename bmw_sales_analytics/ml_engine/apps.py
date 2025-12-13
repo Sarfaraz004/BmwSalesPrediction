@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class PredictionConfig(AppConfig):
+class MlEngineConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'prediction'
+    name = 'ml_engine'

@@ -1,0 +1,15 @@
+<h2>Price Prediction</h2>
+<form method="post">{% csrf_token %}
+  <input name="model" placeholder="Model">
+  <input name="year" type="number">
+  <input name="region">
+  <input name="fuel_type">
+  <input name="transmission">
+  <input name="engine_size_l">
+  <input name="mileage_km">
+  <button>Predict</button>
+</form>
+
+{% if result %}
+<h3>Predicted Price: ${{ result }}</h3>
+{% endif %}
