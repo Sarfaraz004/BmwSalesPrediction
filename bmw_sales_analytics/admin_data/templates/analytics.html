@@ -5,35 +5,187 @@
     <title>BMW Analytics Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+/* ===== Global ===== */
+body {
+    margin: 0;
+    padding: 30px;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    background: linear-gradient(135deg, #050810, #0a0e27);
+    color: #e0e0e0;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+    background: linear-gradient(135deg, #1c69d4, #00d4ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* ===== Controls ===== */
+.controls {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+label {
+    font-size: 14px;
+    color: #9db8ff;
+}
+
+select {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(0,168,255,0.4);
+    background: rgba(20,30,60,0.9);
+    color: white;
+    font-size: 14px;
+}
+
+select:focus {
+    outline: none;
+    border-color: #00d4ff;
+    box-shadow: 0 0 10px rgba(0,212,255,0.4);
+}
+
+/* ===== Toggle ===== */
+.toggle-box {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.toggle-box label {
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* ===== Charts ===== */
+.chart-card {
+    background: rgba(20,30,60,0.6);
+    border: 1px solid rgba(0,168,255,0.2);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0,168,255,0.15);
+}
+
+canvas {
+    max-width: 100%;
+}
+</style>
+
 </head>
 
 <body>
 
     <h2>BMW Sales Analytics Dashboard</h2>
 
-    <!-- Model Dropdown -->
-    <label>Select Model:</label>
-    <select id="modelSelect">
-        <option value="">-- Choose Model --</option>
-        {% for m in models %}
-        <option value="{{ m }}">{{ m }}</option>
-        {% endfor %}
-    </select>
+    <div class="controls">
+    <div>
+        <label>Select Model</label><br>
+        <select id="modelSelect">
+            <option value="">-- Choose Model --</option>
+            {% for m in models %}
+            <option value="{{ m }}">{{ m }}</option>
+            {% endfor %}
+        </select>
+    </div>
 
-    <!-- Year Dropdown (dynamically filled) -->
-    <label>Select Year:</label>
-    <select id="yearSelect">
-        <option value="">-- Select Year --</option>
-    </select>
+    <div>
+        <label>Select Year</label><br>
+        <select id="yearSelect">
+            <option value="">-- Select Year --</option>
+        </select>
+    </div>
+</div>
 
-    <hr><br>
+<div class="toggle-box">
+    <label>
+        <input type="checkbox" id="showAllToggle">
+        Show all data points
+    </label>
+</div>
 
-    <!-- Charts -->
-    <canvas id="priceChart" height="100"></canvas><br>
-    <canvas id="salesChart" height="100"></canvas><br>
-    <canvas id="regionChart" height="100"></canvas><br>
+<div class="chart-card">
+    <canvas id="priceChart" height="100"></canvas>
+</div>
+
+<div class="chart-card">
+    <canvas id="salesChart" height="100"></canvas>
+</div>
 
     <script>
+        function limitData(labels, data, limit = 12, showAll = false) {
+    if (showAll || labels.length <= limit) {
+        return { labels, data };
+    }
+    return {
+        labels: labels.slice(-limit),
+        data: data.slice(-limit)
+    };
+}
+function loadCharts(model, year = null) {
+    let url = `/basemode/analytics/data/${model}/`;
+    if (year) url += `?year=${year}`;
+
+    $.getJSON(url, function (data) {
+
+        resetCharts();
+
+        const showAll = $('#showAllToggle').is(':checked');
+
+        const priceData = limitData(data.years, data.prices, 12, showAll);
+        const salesData = limitData(data.years, data.sales, 12, showAll);
+
+        priceChartInstance = new Chart(priceChart, {
+            type: 'line',
+            data: {
+                labels: priceData.labels,
+                datasets: [{
+                    label: "Price",
+                    data: priceData.data,
+                    borderColor: "#00d4ff",
+                    backgroundColor: "rgba(0,212,255,0.2)",
+                    tension: 0.4
+                }]
+            }
+        });
+
+        salesChartInstance = new Chart(salesChart, {
+            type: 'bar',
+            data: {
+                labels: salesData.labels,
+                datasets: [{
+                    label: "Sales Volume",
+                    data: salesData.data,
+                    backgroundColor: "#1c69d4"
+                }]
+            }
+        });
+
+        regionChartInstance = new Chart(regionChart, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(data.region_data),
+                datasets: [{
+                    data: Object.values(data.region_data),
+                    backgroundColor: ["#1c69d4", "#00d4ff", "#4a8fe7", "#9db8ff"]
+                }]
+            }
+        });
+    });
+}
+$('#showAllToggle').change(function () {
+    let model = $('#modelSelect').val();
+    let year = $('#yearSelect').val();
+    if (model) loadCharts(model, year);
+});
+
         let priceChartInstance, salesChartInstance, regionChartInstance;
 
         function resetCharts() {
@@ -47,35 +199,6 @@
             $.getJSON(`/basemode/analytics/data/${model}/?years_only=true`, function (data) {
                 $('#yearSelect').empty().append(`<option value="">-- Select Year --</option>`);
                 data.years.forEach(y => $('#yearSelect').append(`<option value="${y}">${y}</option>`));
-            });
-        }
-
-        /* Load charts → full data or year-wise from same API */
-        function loadCharts(model, year = null) {
-            let url = `/basemode/analytics/data/${model}/`;
-            if (year) url += `?year=${year}`;
-
-            $.getJSON(url, function (data) {
-
-                resetCharts(); // avoid chart overlap
-
-                priceChartInstance = new Chart(priceChart, {
-                    type: 'line',
-                    data: { labels: data.years, datasets: [{ label: "Price", data: data.prices }] }
-                });
-
-                salesChartInstance = new Chart(salesChart, {
-                    type: 'bar',
-                    data: { labels: data.years, datasets: [{ label: "Sales Volume", data: data.sales }] }
-                });
-
-                regionChartInstance = new Chart(regionChart, {
-                    type: 'pie',
-                    data: {
-                        labels: Object.keys(data.region_data),
-                        datasets: [{ data: Object.values(data.region_data) }]
-                    }
-                });
             });
         }
 

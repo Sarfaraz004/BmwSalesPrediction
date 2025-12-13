@@ -841,6 +841,15 @@
             color: var(--text-dim);
             line-height: 1.7;
         }
+        .btn-login {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
     </style>
 </head>
 
@@ -870,7 +879,7 @@
                 </div>
 
                 {% else %}
-                <button onclick="window.location.href='/login/'">Login</button>
+                <button onclick="window.location.href='/login/'" class="btn-login">Login</button>
                 {% endif %}
 
             </div>
