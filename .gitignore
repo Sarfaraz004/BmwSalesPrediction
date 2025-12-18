@@ -1,5 +1,3 @@
 tests/
-*.pkl
-__pycache__/
 *.pyc
 .env
